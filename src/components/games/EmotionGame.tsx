@@ -243,15 +243,15 @@ export default function EmotionMatchDrawable() {
   };
 
   useEffect(() => {
-  function resizeCanvas() {
-    const canvas = canvasRef.current;
-    if (canvas && canvas.parentElement) {
-      const rect = canvas.parentElement.getBoundingClientRect();
-      canvas.width = rect.width;
-      canvas.height = rect.height;
+    function resizeCanvas() {
+      const canvas = canvasRef.current;
+      if (canvas && canvas.parentElement) {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+      }
     }
-  }
-  resizeCanvas();
+    resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
     return () => {
       window.removeEventListener("resize", resizeCanvas);
@@ -259,22 +259,26 @@ export default function EmotionMatchDrawable() {
   }, [started, nameOrder, emojiOrder]);
 
   // UI
-  const gapY = 56;
-  const canvasHeight = Math.max(nameOrder.length, emojiOrder.length) * gapY + 64;
+  const gapY = 44; // slightly less than desktop
+  const canvasHeight = Math.max(nameOrder.length, emojiOrder.length) * gapY + 48;
 
-  return (
+  // Mobile responsiveness: use flex-col on small screens, keep layout on desktop
+  // Also make buttons/padding/font-size adjust for mobile
+  // Do NOT reposition the emotion and emoji columns, just stack them vertically on mobile
+return (
     <Card
-      className="island-card p-4"
+      className="island-card p-1 sm:p-4 bg-[#f9fbfc]"
       style={{
-        minHeight: 400,
-        maxWidth: 700,
+        minHeight: 320,
+        maxWidth: 420,
         margin: "0 auto",
-        position: "relative"
+        position: "relative",
+        borderRadius: 22,
       }}
     >
       <canvas
         ref={canvasRef}
-        width={700}
+        width={420}
         height={canvasHeight}
         style={{
           position: "absolute",
@@ -285,29 +289,32 @@ export default function EmotionMatchDrawable() {
         }}
       />
       <div className="text-center relative z-10">
-        <h3 className="text-2xl font-bold mb-4 font-nunito">Emotion Match Challenge (Draw lines to match!)</h3>
+        <h3 className="text-lg sm:text-2xl font-bold mb-3 font-nunito">Emotion Match Challenge (Draw lines to match!)</h3>
         {!started ? (
           <div>
-            <p className="mb-4 text-muted-foreground">
+            <p className="mb-4 text-muted-foreground text-xs sm:text-base">
               Match each emotion name to the correct emoji by drawing a line.<br />
               Difficulty increases each round. Wrong matches lose time.<br />
               Each round teaches a mental health fact!
             </p>
-            <Button onClick={startGame} className="ocean-button">
+            <Button onClick={startGame} className="ocean-button w-full sm:w-auto text-sm py-2">
               Start Challenge
             </Button>
           </div>
         ) : (
           <>
-            <div className="flex justify-between mb-2">
-              <Badge variant="secondary">Round: {currentRound}</Badge>
-              <Badge variant="secondary">Score: {score}</Badge>
-              <Badge variant="secondary">Time Left: {timeLeft}s</Badge>
+            <div className="flex justify-between mb-2 px-1">
+              <Badge variant="secondary" className="px-2 py-1 rounded-lg text-xs">Round: {currentRound}</Badge>
+              <Badge variant="secondary" className="px-2 py-1 rounded-lg text-xs">Score: {score}</Badge>
+              <Badge variant="secondary" className="px-2 py-1 rounded-lg text-xs">Time Left: {timeLeft}s</Badge>
             </div>
-            <div className="flex flex-row items-start justify-between mt-8" style={{position: "relative"}}>
+            <div
+              className="flex flex-row items-start justify-between mt-4 gap-2"
+              style={{ position: "relative" }}
+            >
               {/* Left: Emotion Names */}
-              <div style={{width: 180}}>
-                <h4 className="font-semibold mb-2">Emotion Names</h4>
+              <div className="w-[42%] sm:w-[180px]">
+                <h4 className="font-semibold mb-1 text-sm sm:text-lg">Emotion Names</h4>
                 {nameOrder.map((name, i) => (
                   <div
                     key={name}
@@ -325,7 +332,12 @@ export default function EmotionMatchDrawable() {
                     <Button
                       variant="outline"
                       disabled={!!matches[name] || showResult}
-                      className="w-full"
+                      className="w-full text-xs sm:text-base py-2"
+                      style={{
+                        borderRadius: 14,
+                        padding: "3px 0",
+                        minHeight: 36,
+                      }}
                     >
                       {name}
                     </Button>
@@ -333,10 +345,10 @@ export default function EmotionMatchDrawable() {
                 ))}
               </div>
               {/* Spacer for canvas */}
-              <div style={{width: 120}} />
+              <div className="w-[5%]" />
               {/* Right: Emojis */}
-              <div style={{width: 180}}>
-                <h4 className="font-semibold mb-2">Emojis</h4>
+              <div className="w-[42%] sm:w-[180px]">
+                <h4 className="font-semibold mb-1 text-sm sm:text-lg">Emojis</h4>
                 {emojiOrder.map((emoji, i) => (
                   <div
                     key={emoji}
@@ -348,15 +360,18 @@ export default function EmotionMatchDrawable() {
                       justifyContent: "flex-start",
                       cursor: Object.values(matches).includes(emoji) || showResult ? "not-allowed" : "pointer"
                     }}
-                    // Desktop
                     onMouseUp={() => handleDropOnEmoji(i)}
-                    // Mobile
                     onTouchEnd={() => handleDropOnEmoji(i)}
                   >
                     <Button
                       variant="outline"
-                      className="w-full text-2xl"
+                      className="w-full text-lg sm:text-2xl py-2"
                       disabled={Object.values(matches).includes(emoji) || showResult}
+                      style={{
+                        borderRadius: 14,
+                        padding: "3px 0",
+                        minHeight: 36,
+                      }}
                     >
                       {emoji}
                     </Button>
@@ -365,22 +380,22 @@ export default function EmotionMatchDrawable() {
               </div>
             </div>
             {/* Show what was matched */}
-            <div className="my-2">
+            <div className="my-2 flex flex-wrap justify-center gap-1">
               {Object.entries(matches).map(([name, emoji]) => (
-                <Badge key={name} variant="secondary" className="mr-2 mb-2">
+                <Badge key={name} variant="secondary" className="text-xs py-1 px-2 rounded-lg">
                   {name} matched with {emoji}
                 </Badge>
               ))}
             </div>
             {/* Result / Fact */}
             {showResult && (
-              <div className="my-4">
-                <p className="mb-2 text-lg font-semibold">Round Complete!</p>
-                <p className="mb-2 text-muted-foreground">{roundFact}</p>
+              <div className="my-2">
+                <p className="mb-1 text-base font-semibold">Round Complete!</p>
+                <p className="mb-2 text-muted-foreground text-xs sm:text-base">{roundFact}</p>
                 {difficulty < MAX_DIFFICULTY ? (
-                  <Button onClick={nextRound} className="ocean-button">Next Round</Button>
+                  <Button onClick={nextRound} className="ocean-button w-full sm:w-auto text-sm py-2">Next Round</Button>
                 ) : (
-                  <Button onClick={resetGame} className="ocean-button">Restart Challenge</Button>
+                  <Button onClick={resetGame} className="ocean-button w-full sm:w-auto text-sm py-2">Restart Challenge</Button>
                 )}
               </div>
             )}
@@ -388,8 +403,12 @@ export default function EmotionMatchDrawable() {
             {!showResult && (
               <Button
                 variant="outline"
-                className="mt-4"
+                className="mt-3 w-full sm:w-auto text-sm py-2"
                 onClick={resetGame}
+                style={{
+                  borderRadius: 14,
+                  minHeight: 38,
+                }}
               >
                 End Challenge
               </Button>
