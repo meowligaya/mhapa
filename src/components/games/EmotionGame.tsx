@@ -289,11 +289,11 @@ return (
         }}
       />
       <div className="text-center relative z-10">
-        <h3 className="text-lg sm:text-2xl font-bold mb-3 font-nunito">Emotion Match Challenge (Draw lines to match!)</h3>
+        <h3 className="text-lg sm:text-2xl font-bold mb-3 font-nunito">Emotion Match Challenge (Tap to match!)</h3>
         {!started ? (
           <div>
             <p className="mb-4 text-muted-foreground text-xs sm:text-base">
-              Match each emotion name to the correct emoji by drawing a line.<br />
+              Tap to connect each emotion with its matching emoji.<br />
               Difficulty increases each round. Wrong matches lose time.<br />
               Each round teaches a mental health fact!
             </p>
