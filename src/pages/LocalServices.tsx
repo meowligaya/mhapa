@@ -106,132 +106,145 @@ export default function LocalServices() {
   };
 
   return (
-    <div className="min-h-screen p-4">
-      {/* Header */}
-      <div className="flex items-center gap-4 mb-6">
-        <Button 
-          variant="outline" 
-          size="icon" 
-          onClick={() => navigate(-1)}
-          className="rounded-full"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
-        <div>
-          <h1 className="text-3xl font-bold text-gradient-ocean font-nunito">
-            Local Support Services 🗺️
-          </h1>
-          <p className="text-muted-foreground">
-            Mental health services in Mariveles, Bataan and surrounding areas
-          </p>
+    <div
+      className="min-h-screen p-4 font-quicksand relative"
+      style={{
+        backgroundImage: `url('/assets/map-bg.png')`, // replace with your image later!
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat"
+      }}
+    >
+      {/* Optional overlay for readability */}
+      <div className="absolute inset-0 bg-white/60 pointer-events-none" />
+
+      <div className="relative z-10">
+        {/* Header */}
+        <div className="flex items-center gap-4 mb-6">
+          <Button 
+            variant="outline" 
+            size="icon" 
+            onClick={() => navigate(-1)}
+            className="rounded-full"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </Button>
+          <div>
+            <h1 className="text-3xl font-bold text-gradient-ocean font-nunito">
+              Local Support Services 🗺️
+            </h1>
+            <p className="text-muted-foreground">
+              Mental health services in Mariveles, Bataan and surrounding areas
+            </p>
+          </div>
         </div>
+
+        {/* Emergency Notice */}
+        <Card className="island-card mb-6 border-red-200">
+          <div className="p-4 bg-red-50 rounded-lg">
+            <div className="flex items-center gap-2 mb-2">
+              <Phone className="w-5 h-5 text-red-600" />
+              <h3 className="font-semibold text-red-800">Emergency Contacts</h3>
+            </div>
+            <p className="text-red-700 text-sm mb-2">
+              If you're experiencing a mental health crisis, please reach out immediately:
+            </p>
+            <div className="space-y-1 text-sm">
+              <p><strong>National Crisis Hotline:</strong> 1553 (24/7)</p>
+              <p><strong>Emergency Services:</strong> 911</p>
+              <p><strong>Bataan Emergency:</strong> (047) 791-2131</p>
+            </div>
+          </div>
+        </Card>
+
+        {/* Services List */}
+        <div className="grid gap-6">
+          {mentalHealthServices.map((service) => (
+            <Card key={service.id} className="island-card">
+              <div className="p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h3 className="text-xl font-bold font-nunito mb-2">{service.name}</h3>
+                    <Badge className={getServiceTypeColor(service.type)} variant="secondary">
+                      {service.type}
+                    </Badge>
+                  </div>
+                  <Button
+                    onClick={() => openInMaps(service)}
+                    className="ocean-button"
+                    size="sm"
+                  >
+                    <ExternalLink className="w-4 h-4 mr-1" />
+                    Open in Maps
+                  </Button>
+                </div>
+
+                <p className="text-muted-foreground mb-4">{service.description}</p>
+
+                <div className="grid md:grid-cols-2 gap-4 mb-4">
+                  <div className="space-y-2">
+                    <div className="flex items-start gap-2">
+                      <MapPin className="w-4 h-4 mt-1 text-primary" />
+                      <span className="text-sm">{service.address}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Phone className="w-4 h-4 text-primary" />
+                      <span className="text-sm">{service.phone}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-primary" />
+                      <span className="text-sm">{service.hours}</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="font-semibold mb-2 text-sm">Services Offered:</h4>
+                    <div className="space-y-1">
+                      {service.services.map((serviceOffered, index) => (
+                        <Badge key={index} variant="outline" className="text-xs mr-1 mb-1">
+                          {serviceOffered}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t">
+                  <p className="text-xs text-muted-foreground">
+                    Click "Open in Maps" to get directions and see the exact location. 
+                    It's recommended to call ahead to confirm availability and schedule appointments.
+                  </p>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+
+        {/* Additional Resources */}
+        <Card className="island-card mt-8">
+          <div className="p-6">
+            <h3 className="text-xl font-bold font-nunito mb-4">Additional Resources</h3>
+            <div className="grid md:grid-cols-2 gap-4 text-sm">
+              <div>
+                <h4 className="font-semibold mb-2">Online Support</h4>
+                <ul className="space-y-1 text-muted-foreground">
+                  <li>• Department of Health Mental Health Programs</li>
+                  <li>• National Center for Mental Health</li>
+                  <li>• Philippine Mental Health Association</li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Self-Help Resources</h4>
+                <ul className="space-y-1 text-muted-foreground">
+                  <li>• Mindfulness and meditation apps</li>
+                  <li>• Mental health first aid courses</li>
+                  <li>• Peer support groups</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </Card>
       </div>
-
-      {/* Emergency Notice */}
-      <Card className="island-card mb-6 border-red-200">
-        <div className="p-4 bg-red-50 rounded-lg">
-          <div className="flex items-center gap-2 mb-2">
-            <Phone className="w-5 h-5 text-red-600" />
-            <h3 className="font-semibold text-red-800">Emergency Contacts</h3>
-          </div>
-          <p className="text-red-700 text-sm mb-2">
-            If you're experiencing a mental health crisis, please reach out immediately:
-          </p>
-          <div className="space-y-1 text-sm">
-            <p><strong>National Crisis Hotline:</strong> 1553 (24/7)</p>
-            <p><strong>Emergency Services:</strong> 911</p>
-            <p><strong>Bataan Emergency:</strong> (047) 791-2131</p>
-          </div>
-        </div>
-      </Card>
-
-      {/* Services List */}
-      <div className="grid gap-6">
-        {mentalHealthServices.map((service) => (
-          <Card key={service.id} className="island-card">
-            <div className="p-6">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h3 className="text-xl font-bold font-nunito mb-2">{service.name}</h3>
-                  <Badge className={getServiceTypeColor(service.type)} variant="secondary">
-                    {service.type}
-                  </Badge>
-                </div>
-                <Button
-                  onClick={() => openInMaps(service)}
-                  className="ocean-button"
-                  size="sm"
-                >
-                  <ExternalLink className="w-4 h-4 mr-1" />
-                  Open in Maps
-                </Button>
-              </div>
-
-              <p className="text-muted-foreground mb-4">{service.description}</p>
-
-              <div className="grid md:grid-cols-2 gap-4 mb-4">
-                <div className="space-y-2">
-                  <div className="flex items-start gap-2">
-                    <MapPin className="w-4 h-4 mt-1 text-primary" />
-                    <span className="text-sm">{service.address}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Phone className="w-4 h-4 text-primary" />
-                    <span className="text-sm">{service.phone}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-primary" />
-                    <span className="text-sm">{service.hours}</span>
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="font-semibold mb-2 text-sm">Services Offered:</h4>
-                  <div className="space-y-1">
-                    {service.services.map((serviceOffered, index) => (
-                      <Badge key={index} variant="outline" className="text-xs mr-1 mb-1">
-                        {serviceOffered}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-4 border-t">
-                <p className="text-xs text-muted-foreground">
-                  Click "Open in Maps" to get directions and see the exact location. 
-                  It's recommended to call ahead to confirm availability and schedule appointments.
-                </p>
-              </div>
-            </div>
-          </Card>
-        ))}
-      </div>
-
-      {/* Additional Resources */}
-      <Card className="island-card mt-8">
-        <div className="p-6">
-          <h3 className="text-xl font-bold font-nunito mb-4">Additional Resources</h3>
-          <div className="grid md:grid-cols-2 gap-4 text-sm">
-            <div>
-              <h4 className="font-semibold mb-2">Online Support</h4>
-              <ul className="space-y-1 text-muted-foreground">
-                <li>• Department of Health Mental Health Programs</li>
-                <li>• National Center for Mental Health</li>
-                <li>• Philippine Mental Health Association</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-2">Self-Help Resources</h4>
-              <ul className="space-y-1 text-muted-foreground">
-                <li>• Mindfulness and meditation apps</li>
-                <li>• Mental health first aid courses</li>
-                <li>• Peer support groups</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </Card>
     </div>
   );
 }

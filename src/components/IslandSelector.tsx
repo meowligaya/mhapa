@@ -35,8 +35,19 @@ const islands = [
 
 export default function IslandSelector({ onIslandSelect }: IslandSelectorProps) {
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-full px-4">
+    <div
+      className="min-h-screen flex items-center justify-center p-4 relative"
+      style={{
+        backgroundImage: `url('/assets/map-bg.png')`, // <- replace with your image later!
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat"
+      }}
+    >
+      {/* Optional: Overlay for better readability */}
+      <div className="absolute inset-0 bg-white/60 pointer-events-none" />
+
+      <div className="w-full max-w-full px-4 relative z-10">
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-gradient-ocean mb-4 font-nunito">
             MHapa
@@ -63,7 +74,6 @@ export default function IslandSelector({ onIslandSelect }: IslandSelectorProps) 
                     <div className="activity-bubble">
                       <IconComponent className="w-8 h-8 text-primary" />
                     </div>
-                    
                     <div>
                       <h3 className="text-xl font-bold text-card-foreground font-nunito">
                         {island.label}
@@ -72,11 +82,9 @@ export default function IslandSelector({ onIslandSelect }: IslandSelectorProps) 
                         {island.description}
                       </p>
                     </div>
-                    
                     <p className="text-sm text-card-foreground opacity-80 leading-relaxed">
                       {island.activities}
                     </p>
-                    
                     <Button className="ocean-button w-full">
                       Sail to Island
                     </Button>
