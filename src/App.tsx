@@ -10,6 +10,9 @@ import NotFound from "./pages/NotFound";
 import Index from "./pages/Index";
 import LessonViewer from "./pages/LessonViewer";
 
+// Import your new AdminDashboard component
+import AdminDashboard from "./components/AdminDashboard";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -26,6 +29,14 @@ const App = () => (
           <Route path="/local-services" element={<LocalServices />} />
           <Route path="/index" element={<Index />} />
           <Route path="/lesson/:lessonName" element={<LessonViewer />} />
+          {/* Admin Dashboard for Administrator */}
+          <Route path="/admin" element={
+            <AdminDashboard />
+          } />
+          {/* Admin Dashboard for Mental Health Professional (MMWGH Staff) */}
+          <Route path="/mmwgh" element={
+            <AdminDashboard />
+          } />
           {/* Catch-All for invalid routes */}
           <Route path="*" element={<NotFound />} />
         </Routes>
